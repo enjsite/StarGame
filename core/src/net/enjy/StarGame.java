@@ -18,7 +18,7 @@ public class StarGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		bgTexture = new Texture("textures/bg1.jpg");
+		bgTexture = new Texture("textures/bg2.jpg");
 		bgSprite = new Sprite(bgTexture);
 		//bgSprite.setSize(bgSprite.getWidth(), bgSprite.getHeight());
 		//bgSprite.setPosition(0f, 0f);
