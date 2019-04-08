@@ -18,8 +18,8 @@ public class StarGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		//bgTexture = new Texture("textures/bg1.jpg");
-		//bgSprite = new Sprite(bgTexture);
+		bgTexture = new Texture("textures/bg1.jpg");
+		bgSprite = new Sprite(bgTexture);
 		//bgSprite.setSize(bgSprite.getWidth(), bgSprite.getHeight());
 		//bgSprite.setPosition(0f, 0f);
 
@@ -32,7 +32,7 @@ public class StarGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0.5f, 0.9f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		//batch.draw(bgTexture, 0, 0, bgSprite.getWidth(), bgSprite.getHeight());
+		batch.draw(bgTexture, 0, 0, bgSprite.getWidth(), bgSprite.getHeight());
 		batch.draw(img, 0, 0, 256, 256);
 		batch.draw(region, 100, 100);
 		batch.end();
