@@ -63,7 +63,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         resize(worldBounds);
     }
 
-    public void resize(Rect worldBoundds) {
+    public void resize(Rect worldBounds) {
 
     }
 

@@ -5,16 +5,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.enjy.base.Sprite;
 import net.enjy.math.Rect;
 
-public class Background extends Sprite {
-
-
-    public Background(TextureRegion region) {
+public class Ship extends Sprite {
+    public Ship(TextureRegion region) {
         super(region);
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(worldBounds.getHeight());
-        pos.set(worldBounds.pos);
+        setHeightProportion(0.1f);
+        pos.set(-0.45f, -0.45f);
     }
 }
