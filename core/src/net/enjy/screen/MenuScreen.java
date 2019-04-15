@@ -2,26 +2,38 @@ package net.enjy.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import net.enjy.base.BaseScreen;
+import net.enjy.math.Rect;
+import net.enjy.sprite.Background;
 
 public class MenuScreen extends BaseScreen {
 
-    private Vector2 pos;
+//    private Vector2 pos;
 //    private Vector2 v;
 //    private Vector2 buf;
-    private Texture img;
+//    private Texture img;
+    private Texture bg;
+    private Background background;
 
     @Override
     public void show() {
         super.show();
 //        touch = new Vector2();
-        pos = new Vector2();
+//        pos = new Vector2();
 //        v = new Vector2();
 //        buf = new Vector2();
-        img = new Texture("badlogic.jpg");
-        batch.getProjectionMatrix().idt();
+//        img = new Texture("badlogic.jpg");
+        bg = new Texture("textures/bg2.jpg");
+        background = new Background(new TextureRegion(bg));
+    }
+
+    @Override
+    public void resize(Rect worldBoundds) {
+        super.resize(worldBoundds);
+        background.resize(worldBounds);
     }
 
     @Override
@@ -36,14 +48,16 @@ public class MenuScreen extends BaseScreen {
 //        }
 
 		batch.begin();
-		batch.draw(img, -0.5f, -0.5f, 1f, 1f);
+//		batch.draw(img, -0.5f, -0.5f, 1f, 1f);
+        background.draw(batch);
 		batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        img.dispose();
+        bg.dispose();
+//        img.dispose();
     }
 
     @Override
