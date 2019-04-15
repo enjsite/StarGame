@@ -10,11 +10,10 @@ public class Sprite extends Rect {
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
-    public int frame;
+    protected int frame;
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
-        //this.frame = frame;
         regions[0] = region;
         System.out.println("FRAME "+ frame);
     }

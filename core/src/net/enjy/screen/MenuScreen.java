@@ -12,10 +12,11 @@ import net.enjy.sprite.Ship;
 
 public class MenuScreen extends BaseScreen {
 
+//    private Vector2 touch;
 //    private Vector2 pos;
 //    private Vector2 v;
 //    private Vector2 buf;
-//    private Texture img;
+
     private Texture bg;
     private Background background;
 
@@ -27,16 +28,14 @@ public class MenuScreen extends BaseScreen {
         super.show();
 //        touch = new Vector2();
 //        pos = new Vector2();
-//        v = new Vector2();
 //        buf = new Vector2();
 
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
 
-
         img = new Texture("color_sphere.png");
         ship = new Ship(new TextureRegion(img));
-
+        ship.v = new Vector2();
     }
 
     @Override
@@ -57,8 +56,9 @@ public class MenuScreen extends BaseScreen {
 //            pos.set(touch);
 //        }
 
+        ship.update(1);
+
 		batch.begin();
-//		batch.draw(img, -0.5f, -0.5f, 1f, 1f);
         background.draw(batch);
         ship.draw(batch);
 		batch.end();
@@ -73,15 +73,8 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        ship.touchDown(touch, pointer);
         return false;
     }
 
-//    @Override
-//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-////        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-////        v = touch.cpy().sub(pos);
-////        v.setLength(1f);
-//
-//        return false;
-//    }
 }
