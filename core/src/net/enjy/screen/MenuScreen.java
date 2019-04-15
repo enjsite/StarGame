@@ -11,6 +11,7 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 pos;
     private Vector2 v;
+    private Vector2 buf;
     private Texture img;
 
     @Override
@@ -19,21 +20,24 @@ public class MenuScreen extends BaseScreen {
         touch = new Vector2();
         pos = new Vector2();
         v = new Vector2();
-
+        buf = new Vector2();
         img = new Texture("color_sphere.png");
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        pos.add(v);
+        buf.set(touch);
+        if(buf.sub(pos).len() > v.len()){
+            pos.add(v);
+        }else{
+            v.setZero();
+            pos.set(touch);
+        }
+
 		batch.begin();
 		batch.draw(img, pos.x, pos.y);
 		batch.end();
-
-        if(Math.abs(Math.abs(touch.y) - Math.abs(pos.y)) <= Math.abs(v.y)){
-            v.setZero();
-        }
     }
 
     @Override
