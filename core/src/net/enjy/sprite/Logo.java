@@ -7,17 +7,17 @@ import com.badlogic.gdx.math.Vector2;
 import net.enjy.base.Sprite;
 import net.enjy.math.Rect;
 
-public class Ship extends Sprite {
+public class Logo extends Sprite {
 
     private Vector2 touch;
     private Vector2 v;
     private Vector2 bufV;
     private Vector2 buf;
 
-    public Ship(TextureRegion region) {
-        super(region);
 
-        setHeightProportion(0.1f);
+    public Logo(TextureRegion region) {
+        super(region);
+        setHeightProportion(0.3f);
 
         touch = new Vector2();
         v = new Vector2();
@@ -28,8 +28,7 @@ public class Ship extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.1f);
-        pos.set(-0.45f, -0.45f);
+        setHeightProportion(0.3f);
     }
 
     @Override

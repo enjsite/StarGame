@@ -8,14 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Logo;
 import net.enjy.sprite.Ship;
 
 public class MenuScreen extends BaseScreen {
-
-//    private Vector2 touch;
-//    private Vector2 pos;
-//    private Vector2 v;
-//    private Vector2 buf;
 
     private Texture bg;
     private Background background;
@@ -23,19 +19,21 @@ public class MenuScreen extends BaseScreen {
     private Texture img;
     private Ship ship;
 
+    private Texture textureLogo;
+    private Logo logo;
+
     @Override
     public void show() {
         super.show();
-//        touch = new Vector2();
-//        pos = new Vector2();
-//        buf = new Vector2();
 
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
 
         img = new Texture("color_sphere.png");
         ship = new Ship(new TextureRegion(img));
-        ship.v = new Vector2();
+
+        textureLogo = new Texture("badlogic.jpg");
+        logo = new Logo(new TextureRegion(textureLogo));
     }
 
     @Override
@@ -43,25 +41,27 @@ public class MenuScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         ship.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-//        buf.set(touch);
-//        if(buf.sub(pos).len() > v.len()){
-//            pos.add(v);
-//        }else{
-//            v.setZero();
-//            pos.set(touch);
-//        }
+        update(delta);
+        draw();
+    }
 
-        ship.update(1);
+    private void update(float delta){
+        logo.update(delta);
+        ship.update(delta);
+    }
 
-		batch.begin();
+    private void draw(){
+        batch.begin();
         background.draw(batch);
+        logo.draw(batch);
         ship.draw(batch);
-		batch.end();
+        batch.end();
     }
 
     @Override
@@ -69,11 +69,13 @@ public class MenuScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         img.dispose();
+        textureLogo.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         ship.touchDown(touch, pointer);
+        logo.touchDown(touch,pointer);
         return false;
     }
 
