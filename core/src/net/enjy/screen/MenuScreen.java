@@ -8,69 +8,75 @@ import com.badlogic.gdx.math.Vector2;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Logo;
+import net.enjy.sprite.Ship;
 
 public class MenuScreen extends BaseScreen {
 
-//    private Vector2 pos;
-//    private Vector2 v;
-//    private Vector2 buf;
-//    private Texture img;
     private Texture bg;
     private Background background;
+
+    private Texture img;
+    private Ship ship;
+
+    private Texture textureLogo;
+    private Logo logo;
 
     @Override
     public void show() {
         super.show();
-//        touch = new Vector2();
-//        pos = new Vector2();
-//        v = new Vector2();
-//        buf = new Vector2();
-//        img = new Texture("badlogic.jpg");
+
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
+
+        img = new Texture("color_sphere.png");
+        ship = new Ship(new TextureRegion(img));
+
+        textureLogo = new Texture("badlogic.jpg");
+        logo = new Logo(new TextureRegion(textureLogo));
     }
 
     @Override
-    public void resize(Rect worldBoundds) {
-        super.resize(worldBoundds);
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
         background.resize(worldBounds);
+        ship.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-//        buf.set(touch);
-//        if(buf.sub(pos).len() > v.len()){
-//            pos.add(v);
-//        }else{
-//            v.setZero();
-//            pos.set(touch);
-//        }
+        update(delta);
+        draw();
+    }
 
-		batch.begin();
-//		batch.draw(img, -0.5f, -0.5f, 1f, 1f);
+    private void update(float delta){
+        logo.update(delta);
+        ship.update(delta);
+    }
+
+    private void draw(){
+        batch.begin();
         background.draw(batch);
-		batch.end();
+        logo.draw(batch);
+        ship.draw(batch);
+        batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
         bg.dispose();
-//        img.dispose();
+        img.dispose();
+        textureLogo.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        ship.touchDown(touch, pointer);
+        logo.touchDown(touch,pointer);
         return false;
     }
 
-//    @Override
-//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-////        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-////        v = touch.cpy().sub(pos);
-////        v.setLength(1f);
-//
-//        return false;
-//    }
 }

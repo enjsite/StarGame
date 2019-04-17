@@ -15,6 +15,7 @@ public class Sprite extends Rect {
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
+        System.out.println("FRAME "+ frame);
     }
 
     public void setHeightProportion(float height){
