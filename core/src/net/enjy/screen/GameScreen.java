@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Ship;
 import net.enjy.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -15,6 +16,9 @@ public class GameScreen extends BaseScreen {
     private Background background;
     private TextureAtlas atlas;
     private Star starList[];
+
+    private Texture textureShip;
+    private Ship ship;
 
     @Override
     public void show() {
@@ -27,6 +31,10 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < starList.length; i++){
             starList[i] = new Star(atlas);
         }
+
+        textureShip = new Texture("color_sphere.png");
+        ship = new Ship(new TextureRegion(textureShip));
+
     }
 
     @Override
@@ -36,6 +44,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.resize(worldBounds);
         }
+        ship.resize(worldBounds);
     }
 
     @Override
@@ -49,6 +58,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.update(delta);
         }
+        ship.update(delta);
     }
 
     private void draw(){
@@ -57,6 +67,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.draw(batch);
         }
+        ship.draw(batch);
         batch.end();
     }
 
@@ -65,6 +76,7 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
+        textureShip.dispose();
     }
 
 
