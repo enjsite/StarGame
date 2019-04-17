@@ -29,7 +29,7 @@ public class Ship extends Sprite {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         setHeightProportion(0.1f);
-        pos.set(-0.45f, -0.45f);
+        pos.set(-0.1f, -0.1f);
     }
 
     @Override
