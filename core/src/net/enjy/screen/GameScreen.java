@@ -3,10 +3,12 @@ package net.enjy.screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Ship;
 import net.enjy.sprite.Star;
 
@@ -17,8 +19,10 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private Star starList[];
 
-    private Texture textureShip;
-    private Ship ship;
+   // private Texture textureShip;
+    // private Ship ship;
+
+    private MainShip mainShip;
 
     @Override
     public void show() {
@@ -26,15 +30,16 @@ public class GameScreen extends BaseScreen {
 
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
-        starList = new Star[256];
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        starList = new Star[64];
         for (int i = 0; i < starList.length; i++){
             starList[i] = new Star(atlas);
         }
 
-        textureShip = new Texture("color_sphere.png");
-        ship = new Ship(new TextureRegion(textureShip));
+        //textureShip = new Texture("color_sphere.png");
+        //ship = new Ship(new TextureRegion(textureShip));
 
+        mainShip = new MainShip(atlas);
     }
 
     @Override
@@ -44,7 +49,8 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.resize(worldBounds);
         }
-        ship.resize(worldBounds);
+        //ship.resize(worldBounds);
+        mainShip.resize(worldBounds);
     }
 
     @Override
@@ -58,7 +64,8 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.update(delta);
         }
-        ship.update(delta);
+        //ship.update(delta);
+        mainShip.update(delta);
     }
 
     private void draw(){
@@ -67,7 +74,8 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.draw(batch);
         }
-        ship.draw(batch);
+        //ship.draw(batch);
+        mainShip.draw(batch);
         batch.end();
     }
 
@@ -76,8 +84,30 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
-        textureShip.dispose();
+        //textureShip.dispose();
     }
 
+    @Override
+    public boolean keyDown(int keycode) {
+        mainShip.keyDown(keycode);
+        return false;
+    }
 
+    @Override
+    public boolean keyUp(int keycode) {
+        mainShip.keyUp(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        mainShip.touchDown(touch, pointer);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        mainShip.touchUp(touch, pointer);
+        return false;
+    }
 }
