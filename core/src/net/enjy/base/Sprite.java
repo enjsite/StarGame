@@ -13,6 +13,8 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions;
     protected int frame;
 
+    private boolean isDestroyed;
+
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
@@ -20,6 +22,9 @@ public class Sprite extends Rect {
 
     public Sprite(TextureRegion region, int rows, int cols, int frames) {
         this.regions = Regions.split(region, rows, cols, frames);
+    }
+
+    public Sprite() {
     }
 
     public void setHeightProportion(float height){
@@ -65,12 +70,22 @@ public class Sprite extends Rect {
     }
 
     public boolean touchDown(Vector2 touch, int pointer) {
-        System.out.println("touchDown touchX = " + touch.x + " touchY = " + touch.y);
         return false;
     }
 
     public boolean touchUp(Vector2 touch, int pointer) {
-        System.out.println("touchUp touchX = " + touch.x + " touchY = " + touch.y);
         return false;
+    }
+
+    public void destroy() {
+        isDestroyed = true;
+    }
+
+    public void flushDestroy() {
+        isDestroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 }

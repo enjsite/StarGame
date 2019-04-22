@@ -2,10 +2,12 @@ package net.enjy.sprite;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import net.enjy.base.Sprite;
 import net.enjy.math.Rect;
+import net.enjy.pool.BulletPool;
 
 public class MainShip extends Sprite {
 
@@ -16,14 +18,23 @@ public class MainShip extends Sprite {
     private Vector2 v = new Vector2();
     private Vector2 v0 = new Vector2(0.5f, 0);
 
+    private BulletPool bulletPool;
+    private TextureRegion bulletRegion;
+    private Vector2 bulletV = new Vector2(0, 0.5f);
+
     private boolean pressedRight;
     private boolean pressedLeft;
 
     private int rightPointer = INVALID_POINTER;
     private int leftPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas) {
+    private float reloadInterval = 0.2f;
+    private float reloadTimer;
+
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletPool = bulletPool;
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
         setHeightProportion(0.15f);
     }
 
@@ -31,6 +42,11 @@ public class MainShip extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -60,6 +76,9 @@ public class MainShip extends Sprite {
             case Input.Keys.RIGHT:
                 pressedRight = true;
                 moveRight();
+                break;
+            case Input.Keys.UP:
+                shoot();
                 break;
         }
         return false;
@@ -126,6 +145,11 @@ public class MainShip extends Sprite {
         }
         stop();
         return false;
+    }
+
+    public void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, pos, bulletV, 0.015f, worldBounds, 1);
     }
 
     private void moveRight() {

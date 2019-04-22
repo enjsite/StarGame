@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
+import net.enjy.pool.BulletPool;
 import net.enjy.sprite.Background;
 import net.enjy.sprite.MainShip;
-import net.enjy.sprite.Ship;
 import net.enjy.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -19,10 +19,9 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private Star starList[];
 
-   // private Texture textureShip;
-    // private Ship ship;
-
     private MainShip mainShip;
+
+    private BulletPool bulletPool;
 
     @Override
     public void show() {
@@ -36,10 +35,8 @@ public class GameScreen extends BaseScreen {
             starList[i] = new Star(atlas);
         }
 
-        //textureShip = new Texture("color_sphere.png");
-        //ship = new Ship(new TextureRegion(textureShip));
-
-        mainShip = new MainShip(atlas);
+        bulletPool = new BulletPool();
+        mainShip = new MainShip(atlas, bulletPool);
     }
 
     @Override
@@ -49,7 +46,6 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.resize(worldBounds);
         }
-        //ship.resize(worldBounds);
         mainShip.resize(worldBounds);
     }
 
@@ -57,6 +53,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        freeAllDestroyedSprites();
         draw();
     }
 
@@ -64,8 +61,12 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.update(delta);
         }
-        //ship.update(delta);
         mainShip.update(delta);
+        bulletPool.updateActiveSprites(delta);
+    }
+
+    private void freeAllDestroyedSprites() {
+        bulletPool.freeAllDestroyedSprites();
     }
 
     private void draw(){
@@ -74,8 +75,8 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.draw(batch);
         }
-        //ship.draw(batch);
         mainShip.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -84,7 +85,7 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
-        //textureShip.dispose();
+        bulletPool.dispose();
     }
 
     @Override
