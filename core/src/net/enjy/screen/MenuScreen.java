@@ -1,7 +1,6 @@
 package net.enjy.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,8 +11,6 @@ import net.enjy.math.Rect;
 import net.enjy.sprite.Background;
 import net.enjy.sprite.ButtonExit;
 import net.enjy.sprite.ButtonPlay;
-import net.enjy.sprite.Logo;
-import net.enjy.sprite.Ship;
 import net.enjy.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
