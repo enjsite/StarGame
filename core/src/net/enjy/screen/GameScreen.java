@@ -13,6 +13,7 @@ import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
 import net.enjy.pool.EnemyPool;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Enemy;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
@@ -73,6 +74,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollisions();
         freeAllDestroyedSprites();
         draw();
     }
@@ -85,6 +87,10 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyGenerator.generate(delta);
+    }
+
+    private void checkCollisions() {
+
     }
 
     private void freeAllDestroyedSprites() {
