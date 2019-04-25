@@ -1,28 +1,18 @@
 package net.enjy.sprite;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import net.enjy.base.Sprite;
+import net.enjy.base.Ship;
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
-
-    private Rect worldBounds;
-
-    private Vector2 v = new Vector2();
-    private Vector2 v0 = new Vector2(0.5f, 0);
-
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private Vector2 bulletV = new Vector2(0, 0.5f);
 
     private boolean pressedRight;
     private boolean pressedLeft;
@@ -30,22 +20,28 @@ public class MainShip extends Sprite {
     private int rightPointer = INVALID_POINTER;
     private int leftPointer = INVALID_POINTER;
 
-    private float reloadInterval = 0.2f;
-    private float reloadTimer;
-
-    private static Sound bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.shootSound = shootSound;
         setHeightProportion(0.15f);
+        this.reloadInterval = 0.2f;
+        this.bulletV.set(0, 0.5f);
+        this.bulletHeight = 0.015f;
+        this.damage = 1;
+        this.v0.set(0.5f, 0);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        setBottom(worldBounds.getBottom() + 0.02f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        pos.mulAdd(v, delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
@@ -59,14 +55,6 @@ public class MainShip extends Sprite {
             setLeft(worldBounds.getLeft());
             stop();
         }
-    }
-
-    @Override
-    public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
-        this.worldBounds = worldBounds;
-        setHeightProportion(0.1f);
-        setBottom(worldBounds.getBottom() + 0.02f);
     }
 
     public boolean keyDown(int keycode) {
@@ -149,12 +137,6 @@ public class MainShip extends Sprite {
         }
         stop();
         return false;
-    }
-
-    public void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos, bulletV, 0.015f, worldBounds, 1);
-        bulletSound.play();
     }
 
     private void moveRight() {
