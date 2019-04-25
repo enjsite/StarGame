@@ -93,14 +93,14 @@ public class GameScreen extends BaseScreen {
     private void checkCollisions() {
         for (Enemy enemy : enemyPool.getActiveObjects()){
             if (!mainShip.isOutside(enemy)) {
-                mainShip.destroy(); // но он появляется снова сразу!
+                mainShip.destroy();
                 enemy.destroy();
             }
         }
         for (Bullet bullet : bulletPool.getActiveObjects()){
             if (!bullet.getOwner().equals(mainShip.getOwnerName())) {
                 if (!mainShip.isOutside(bullet)) {
-                    mainShip.destroy(); // но он появляется снова сразу!
+                    mainShip.destroy();
                     bullet.destroy();
                 }
             }
@@ -120,7 +120,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.draw(batch);
         }
-        mainShip.draw(batch);
+        if (!mainShip.isDestroyed()) {
+            mainShip.draw(batch);
+        }
         bulletPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
 
