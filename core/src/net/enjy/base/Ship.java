@@ -10,6 +10,8 @@ import net.enjy.sprite.Bullet;
 
 public class Ship extends Sprite {
 
+    protected String ownerName;
+
     protected Sound shootSound;
     protected Rect worldBounds;
     protected Vector2 v;
@@ -53,7 +55,11 @@ public class Ship extends Sprite {
 
     public void shoot() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
+        bullet.set(ownerName, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
         shootSound.play();
+    }
+
+    public String getOwnerName() {
+        return ownerName;
     }
 }

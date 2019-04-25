@@ -21,6 +21,7 @@ public class Enemy extends Ship {
         this.worldBounds = worldBounds;
         this.shootSound = shootSound;
         this.descentV = new Vector2(0, -0.3f);
+        this.ownerName = "Enemy";
     }
 
     @Override

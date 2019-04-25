@@ -30,6 +30,7 @@ public class MainShip extends Ship {
         this.bulletHeight = 0.015f;
         this.damage = 1;
         this.v0.set(0.5f, 0);
+        this.ownerName = "Me";
     }
 
     @Override

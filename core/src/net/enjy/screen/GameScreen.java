@@ -13,6 +13,7 @@ import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
 import net.enjy.pool.EnemyPool;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Star;
@@ -90,7 +91,20 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
-
+        for (Enemy enemy : enemyPool.getActiveObjects()){
+            if (!mainShip.isOutside(enemy)) {
+                mainShip.destroy(); // но он появляется снова сразу!
+                enemy.destroy();
+            }
+        }
+        for (Bullet bullet : bulletPool.getActiveObjects()){
+            if (!bullet.getOwner().equals(mainShip.getOwnerName())) {
+                if (!mainShip.isOutside(bullet)) {
+                    mainShip.destroy(); // но он появляется снова сразу!
+                    bullet.destroy();
+                }
+            }
+        }
     }
 
     private void freeAllDestroyedSprites() {
