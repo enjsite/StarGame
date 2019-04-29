@@ -1,5 +1,6 @@
 package net.enjy.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import net.enjy.StarGame;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
@@ -18,6 +20,7 @@ import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
 import net.enjy.sprite.GameOver;
 import net.enjy.sprite.MainShip;
+import net.enjy.sprite.NewGame;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
 
@@ -48,6 +51,7 @@ public class GameScreen extends BaseScreen {
     private EnemyGenerator enemyGenerator;
 
     private GameOver gameOver;
+    private NewGame newGame;
 
     @Override
     public void show() {
@@ -76,6 +80,7 @@ public class GameScreen extends BaseScreen {
         state = State.PLAYING;
 
         gameOver = new GameOver(atlas, worldBounds);
+        newGame = new NewGame(atlas, new StarGame(), worldBounds);
     }
 
     @Override
@@ -111,6 +116,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.updateActiveSprites(delta);
         } else if (state == State.GAME_OVER) {
             gameOver.update(delta);
+            newGame.update(delta);
         }
     }
 
@@ -179,6 +185,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             gameOver.draw(batch);
+            newGame.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
@@ -235,6 +242,9 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer);
         }
+        if (state == State.GAME_OVER) {
+            newGame.touchDown(touch, pointer);
+        }
         return false;
     }
 
@@ -242,6 +252,9 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer);
+        }
+        if (state == State.GAME_OVER) {
+            newGame.touchUp(touch, pointer);
         }
         return false;
     }
