@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.enjy.base.Ship;
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
+import net.enjy.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
@@ -19,9 +20,10 @@ public class MainShip extends Ship {
     private int rightPointer = INVALID_POINTER;
     private int leftPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.shootSound = shootSound;
         setHeightProportion(0.15f);

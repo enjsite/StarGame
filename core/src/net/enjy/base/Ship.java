@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
+import net.enjy.pool.ExplosionPool;
 import net.enjy.sprite.Bullet;
+import net.enjy.sprite.Explosion;
 
 public class Ship extends Sprite {
 
@@ -18,6 +20,7 @@ public class Ship extends Sprite {
     protected Vector2 v0;
 
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
     protected float bulletHeight;
     protected Vector2 bulletV;
@@ -78,12 +81,12 @@ public class Ship extends Sprite {
     @Override
     public void destroy() {
         super.destroy();
-//        boom();
+        boom();
         hp = 0;
     }
 
-//    private void boom() {
-//        Explosion explosion = explosionPool.obtain();
-//        explosion.set(this.getHeight(), this.pos);
-//    }
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(this.getHeight(), this.pos);
+    }
 }
