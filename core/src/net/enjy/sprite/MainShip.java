@@ -29,8 +29,8 @@ public class MainShip extends Ship {
         this.bulletV.set(0, 0.5f);
         this.bulletHeight = 0.015f;
         this.damage = 1;
+        this.hp = 10;
         this.v0.set(0.5f, 0);
-        this.ownerName = "Me";
     }
 
     @Override
@@ -137,6 +137,14 @@ public class MainShip extends Ship {
         }
         stop();
         return false;
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom()
+        );
     }
 
     private void moveRight() {

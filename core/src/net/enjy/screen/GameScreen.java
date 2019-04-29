@@ -19,7 +19,13 @@ import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
 
+import java.util.List;
+
 public class GameScreen extends BaseScreen {
+
+    private enum State {PLAYING, PAUSE, GAME_OVER}
+
+    private State state;
 
     private Texture bg;
     private Background background;
@@ -91,17 +97,47 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
-        for (Enemy enemy : enemyPool.getActiveObjects()){
-            if (!mainShip.isOutside(enemy)) {
-                mainShip.destroy();
+//        if (state != State.PLAYING) {
+//            return;
+//        }
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList){
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();
+            if (enemy.pos.dst(mainShip.pos) < minDist) {
                 enemy.destroy();
+                mainShip.destroy();
+//                state = State.GAME_OVER;
+                return;
             }
         }
-        for (Bullet bullet : bulletPool.getActiveObjects()){
-            if (!bullet.getOwner().equals(mainShip.getOwnerName())) {
-                if (!mainShip.isOutside(bullet)) {
-                    mainShip.destroy();
+
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Bullet bullet : bulletList){
+            if (bullet.isDestroyed()) {
+                continue;
+            }
+            if (bullet.getOwner() == mainShip) {
+                for (Enemy enemy : enemyList) {
+                    if (enemy.isDestroyed()) {
+                        continue;
+                    }
+                    if (enemy.isBulletCollision(bullet)) {
+                        enemy.damage(bullet.getDamage());
+                        bullet.destroy();
+                        return;
+                    }
+                }
+            } else {
+                if (mainShip.isBulletCollision(bullet)) {
+                    mainShip.damage(bullet.getDamage());
+//                    if (mainShip.isDestroyed()) {
+////                        state = State.GAME_OVER;
+//                    }
                     bullet.destroy();
+                    return;
                 }
             }
         }
