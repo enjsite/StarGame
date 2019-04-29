@@ -12,8 +12,6 @@ import net.enjy.sprite.Explosion;
 
 public class Ship extends Sprite {
 
-    protected String ownerName;
-
     protected Sound shootSound;
     protected Rect worldBounds;
     protected Vector2 v;

@@ -16,6 +16,7 @@ import net.enjy.pool.ExplosionPool;
 import net.enjy.sprite.Background;
 import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
+import net.enjy.sprite.GameOver;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
@@ -46,6 +47,8 @@ public class GameScreen extends BaseScreen {
 
     private EnemyGenerator enemyGenerator;
 
+    private GameOver gameOver;
+
     @Override
     public void show() {
         super.show();
@@ -71,6 +74,8 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         state = State.PLAYING;
+
+        gameOver = new GameOver(atlas, worldBounds);
     }
 
     @Override
@@ -104,6 +109,8 @@ public class GameScreen extends BaseScreen {
             enemyGenerator.generate(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
+        } else if (state == State.GAME_OVER) {
+            gameOver.update(delta);
         }
     }
 
@@ -170,6 +177,8 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+        } else if (state == State.GAME_OVER) {
+            gameOver.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
