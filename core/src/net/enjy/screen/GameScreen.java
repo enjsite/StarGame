@@ -13,12 +13,19 @@ import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
 import net.enjy.pool.EnemyPool;
 import net.enjy.sprite.Background;
+import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
 
+import java.util.List;
+
 public class GameScreen extends BaseScreen {
+
+    private enum State {PLAYING, PAUSE, GAME_OVER}
+
+    private State state;
 
     private Texture bg;
     private Background background;
@@ -90,7 +97,50 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
+//        if (state != State.PLAYING) {
+//            return;
+//        }
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList){
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();
+            if (enemy.pos.dst(mainShip.pos) < minDist) {
+                enemy.destroy();
+                mainShip.destroy();
+//                state = State.GAME_OVER;
+                return;
+            }
+        }
 
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Bullet bullet : bulletList){
+            if (bullet.isDestroyed()) {
+                continue;
+            }
+            if (bullet.getOwner() == mainShip) {
+                for (Enemy enemy : enemyList) {
+                    if (enemy.isDestroyed()) {
+                        continue;
+                    }
+                    if (enemy.isBulletCollision(bullet)) {
+                        enemy.damage(bullet.getDamage());
+                        bullet.destroy();
+                        return;
+                    }
+                }
+            } else {
+                if (mainShip.isBulletCollision(bullet)) {
+                    mainShip.damage(bullet.getDamage());
+//                    if (mainShip.isDestroyed()) {
+////                        state = State.GAME_OVER;
+//                    }
+                    bullet.destroy();
+                    return;
+                }
+            }
+        }
     }
 
     private void freeAllDestroyedSprites() {
@@ -106,7 +156,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : starList){
             star.draw(batch);
         }
-        mainShip.draw(batch);
+        if (!mainShip.isDestroyed()) {
+            mainShip.draw(batch);
+        }
         bulletPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
 
