@@ -79,8 +79,8 @@ public class GameScreen extends BaseScreen {
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         state = State.PLAYING;
 
-        gameOver = new GameOver(atlas, worldBounds);
-        newGame = new NewGame(atlas, new StarGame(), worldBounds);
+        gameOver = new GameOver(atlas);
+        newGame = new NewGame(atlas, this);
     }
 
     @Override
@@ -241,8 +241,7 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer);
-        }
-        if (state == State.GAME_OVER) {
+        } else if (state == State.GAME_OVER) {
             newGame.touchDown(touch, pointer);
         }
         return false;
@@ -252,10 +251,19 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer);
-        }
-        if (state == State.GAME_OVER) {
+        } else if (state == State.GAME_OVER) {
             newGame.touchUp(touch, pointer);
         }
         return false;
+    }
+
+    public void reset() {
+        state = State.PLAYING;
+        mainShip.reset();
+
+        bulletPool.freeAllActiveSprites();
+        enemyPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
+
     }
 }
