@@ -91,4 +91,8 @@ public class Ship extends Sprite {
     public int getHp() {
         return hp;
     }
+
+    public Vector2 getV() {
+        return v;
+    }
 }

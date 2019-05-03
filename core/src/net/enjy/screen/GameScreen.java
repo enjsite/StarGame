@@ -23,6 +23,7 @@ import net.enjy.sprite.GameOver;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.NewGame;
 import net.enjy.sprite.Star;
+import net.enjy.sprite.TrackingStar;
 import net.enjy.utils.EnemyGenerator;
 import net.enjy.utils.Font;
 
@@ -40,7 +41,7 @@ public class GameScreen extends BaseScreen {
     private Texture bg;
     private Background background;
     private TextureAtlas atlas;
-    private Star starList[];
+    private TrackingStar starList[];
 
     private MainShip mainShip;
 
@@ -79,14 +80,16 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
-        starList = new Star[64];
-        for (int i = 0; i < starList.length; i++){
-            starList[i] = new Star(atlas);
-        }
+        starList = new TrackingStar[64];
 
         bulletPool = new BulletPool();
         explosionPool = new ExplosionPool(atlas, explosionSound);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound);
+
+        for (int i = 0; i < starList.length; i++){
+            starList[i] = new TrackingStar(atlas, mainShip.getV());
+        }
+
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
 
