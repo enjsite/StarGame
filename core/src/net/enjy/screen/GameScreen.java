@@ -1,5 +1,6 @@
 package net.enjy.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import net.enjy.StarGame;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
@@ -16,7 +18,9 @@ import net.enjy.pool.ExplosionPool;
 import net.enjy.sprite.Background;
 import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
+import net.enjy.sprite.GameOver;
 import net.enjy.sprite.MainShip;
+import net.enjy.sprite.NewGame;
 import net.enjy.sprite.Star;
 import net.enjy.utils.EnemyGenerator;
 
@@ -46,6 +50,9 @@ public class GameScreen extends BaseScreen {
 
     private EnemyGenerator enemyGenerator;
 
+    private GameOver gameOver;
+    private NewGame newGame;
+
     @Override
     public void show() {
         super.show();
@@ -71,6 +78,9 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         state = State.PLAYING;
+
+        gameOver = new GameOver(atlas);
+        newGame = new NewGame(atlas, this);
     }
 
     @Override
@@ -104,6 +114,9 @@ public class GameScreen extends BaseScreen {
             enemyGenerator.generate(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
+        } else if (state == State.GAME_OVER) {
+            gameOver.update(delta);
+            newGame.update(delta);
         }
     }
 
@@ -170,6 +183,9 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+        } else if (state == State.GAME_OVER) {
+            gameOver.draw(batch);
+            newGame.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
@@ -225,6 +241,8 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer);
+        } else if (state == State.GAME_OVER) {
+            newGame.touchDown(touch, pointer);
         }
         return false;
     }
@@ -233,7 +251,19 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer);
+        } else if (state == State.GAME_OVER) {
+            newGame.touchUp(touch, pointer);
         }
         return false;
+    }
+
+    public void reset() {
+        state = State.PLAYING;
+        mainShip.reset();
+
+        bulletPool.freeAllActiveSprites();
+        enemyPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
+
     }
 }
