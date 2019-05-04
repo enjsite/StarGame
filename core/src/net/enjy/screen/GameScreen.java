@@ -1,6 +1,5 @@
 package net.enjy.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -10,22 +9,24 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
-import net.enjy.StarGame;
 import net.enjy.base.BaseScreen;
 import net.enjy.math.Rect;
 import net.enjy.pool.BulletPool;
 import net.enjy.pool.EnemyPool;
 import net.enjy.pool.ExplosionPool;
+import net.enjy.pool.LifePool;
 import net.enjy.sprite.Background;
 import net.enjy.sprite.Bullet;
 import net.enjy.sprite.Enemy;
 import net.enjy.sprite.GameOver;
+import net.enjy.sprite.Life;
 import net.enjy.sprite.MainShip;
 import net.enjy.sprite.NewGame;
 import net.enjy.sprite.Star;
 import net.enjy.sprite.TrackingStar;
 import net.enjy.utils.EnemyGenerator;
 import net.enjy.utils.Font;
+import net.enjy.utils.LifeGenerator;
 
 import java.util.List;
 
@@ -48,13 +49,16 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
     private ExplosionPool explosionPool;
+    private LifePool lifePool;
 
     private Music music;
     private Sound laserSound;
     private Sound bulletSound;
     private Sound explosionSound;
+    private Sound lifeSound;
 
     private EnemyGenerator enemyGenerator;
+    private LifeGenerator lifeGenerator;
 
     private GameOver gameOver;
     private NewGame newGame;
@@ -76,6 +80,7 @@ public class GameScreen extends BaseScreen {
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        lifeSound = Gdx.audio.newSound(Gdx.files.internal("sounds/glass.wav"));
 
         bg = new Texture("textures/bg2.jpg");
         background = new Background(new TextureRegion(bg));
@@ -92,6 +97,9 @@ public class GameScreen extends BaseScreen {
 
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
+
+        lifePool = new LifePool(worldBounds, lifeSound, mainShip);
+        lifeGenerator = new LifeGenerator(lifePool, worldBounds);
 
         font = new Font("font/font.fnt", "font/font.png");
         font.setFontSize(0.02f);
@@ -130,8 +138,11 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.update(delta);
             enemyGenerator.generate(delta, frags);
+            lifeGenerator.generate(delta);
+
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
+            lifePool.updateActiveSprites(delta);
         } else if (state == State.GAME_OVER) {
             gameOver.update(delta);
             newGame.update(delta);
@@ -142,6 +153,19 @@ public class GameScreen extends BaseScreen {
         if (state != State.PLAYING) {
             return;
         }
+
+        List<Life> lifeList =lifePool.getActiveObjects();
+        for (Life life : lifeList) {
+            if (life.isDestroyed()) {
+                continue;
+            }
+            float minDist = life.getHalfWidth() + mainShip.getHalfWidth();
+            if (life.pos.dst(mainShip.pos) < minDist) {
+                life.addLife();
+                life.destroy();
+            }
+        }
+
         List<Enemy> enemyList = enemyPool.getActiveObjects();
         for (Enemy enemy : enemyList){
             if (enemy.isDestroyed()) {
@@ -192,6 +216,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllDestroyedSprites();
         enemyPool.freeAllDestroyedSprites();
         explosionPool.freeAllDestroyedSprites();
+        lifePool.freeAllDestroyedSprites();
     }
 
     private void draw(){
@@ -204,6 +229,7 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+            lifePool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             gameOver.draw(batch);
             newGame.draw(batch);
@@ -245,10 +271,12 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        lifePool.dispose();
         explosionPool.dispose();
         music.dispose();
         laserSound.dispose();
         bulletSound.dispose();
+        lifeSound.dispose();
         explosionSound.dispose();
         font.dispose();
     }
@@ -299,6 +327,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllActiveSprites();
         enemyPool.freeAllActiveSprites();
         explosionPool.freeAllActiveSprites();
+        lifePool.freeAllActiveSprites();
 
     }
 }
