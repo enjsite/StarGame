@@ -44,6 +44,9 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private TrackingStar starList[];
 
+    private Texture textureLife;
+    private TextureRegion regionLife;
+
     private MainShip mainShip;
 
     private BulletPool bulletPool;
@@ -98,7 +101,10 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
 
-        lifePool = new LifePool(worldBounds, lifeSound, mainShip);
+        textureLife = new Texture("textures/green_help.png");
+        regionLife = new TextureRegion(textureLife);
+
+        lifePool = new LifePool(regionLife, worldBounds, lifeSound, mainShip);
         lifeGenerator = new LifeGenerator(lifePool, worldBounds);
 
         font = new Font("font/font.fnt", "font/font.png");
@@ -268,6 +274,7 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         super.dispose();
         bg.dispose();
+        textureLife.dispose();
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();

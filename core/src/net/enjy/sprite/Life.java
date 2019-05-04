@@ -17,8 +17,8 @@ public class Life extends Sprite {
     private MainShip mainShip;
     private int hp;
 
-    public Life(Rect worldBounds, Sound lifeSound, MainShip mainShip) {
-        super(new TextureRegion(new Texture("textures/green_help.png")));
+    public Life(TextureRegion regionLife, Rect worldBounds, Sound lifeSound, MainShip mainShip) {
+        super(regionLife);
         this.worldBounds = worldBounds;
         this.lifeSound = lifeSound;
         this.mainShip = mainShip;
